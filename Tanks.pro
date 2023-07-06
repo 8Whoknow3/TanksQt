@@ -10,12 +10,21 @@ CONFIG += c++17
 
 SOURCES += \
     Button.cpp \
+    Game.cpp \
+    MapCreator.cpp \
+    MapHelper.cpp \
     main.cpp
 
 HEADERS += \
-    Button.h
+    Button.h \
+    Game.h \
+    MapCreator.h \
+    MapHelper.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    Res.qrc

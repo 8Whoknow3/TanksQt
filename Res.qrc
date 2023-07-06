@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/IMAGE">
+        <file>Images/box.png</file>
+        <file>Images/bricks.png</file>
+        <file>Images/forest.png</file>
+        <file>Images/gamemenu.png</file>
+        <file>Images/menu.png</file>
+    </qresource>
+    <qresource prefix="/Maps">
+        <file>maps/map_1.txt</file>
+        <file>maps/map_2.txt</file>
+        <file>maps/map_3.txt</file>
+    </qresource>
+</RCC>
