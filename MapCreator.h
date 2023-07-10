@@ -9,7 +9,7 @@ class MapCreator : public QGraphicsPixmapItem
 public:
     explicit MapCreator();
 
-    void creataMap(QGraphicsScene *scene, QString a = "", QGraphicsItem * parent = 0);
+    void creataMap(QGraphicsScene *scene, int s, QGraphicsItem * parent = 0);
 
 private:
     int row;

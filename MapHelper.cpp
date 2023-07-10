@@ -4,10 +4,16 @@
 
 MapHelper::MapHelper(int a)
 {
-    if(a == 1)
+    if(a == 1){
         setPixmap(QPixmap(":/IMAGE/Images/bricks.png"));
-    else if(a == 2)
+        id = 1;
+    }
+    else if(a == 2){
         setPixmap(QPixmap(":/IMAGE/Images/box.png"));
-    else if(a == 3)
+        id = 2;
+    }
+    else if(a == 3){
         setPixmap(QPixmap(":/IMAGE/Images/forest.png"));
+        id = 3;
+    }
 }

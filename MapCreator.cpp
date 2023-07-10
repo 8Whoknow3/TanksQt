@@ -11,8 +11,9 @@ MapCreator::MapCreator()
 
 }
 
-void MapCreator::creataMap(QGraphicsScene *scene, QString a, QGraphicsItem *parent)
+void MapCreator::creataMap(QGraphicsScene *scene, int s, QGraphicsItem *parent)
 {
+    QString a = QString::number(s);
     QFile file(":/Maps/maps/map_" + a + ".txt");
 
     row = 0;

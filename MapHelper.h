@@ -8,6 +8,8 @@ class MapHelper : public QGraphicsPixmapItem
 {
 public:
     MapHelper(int a);
+private:
+    int id;
 };
 
 #endif // MAPHELPER_H

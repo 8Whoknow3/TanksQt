@@ -13,13 +13,15 @@ SOURCES += \
     Game.cpp \
     MapCreator.cpp \
     MapHelper.cpp \
+    Tank.cpp \
     main.cpp
 
 HEADERS += \
     Button.h \
     Game.h \
     MapCreator.h \
-    MapHelper.h
+    MapHelper.h \
+    Tank.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
