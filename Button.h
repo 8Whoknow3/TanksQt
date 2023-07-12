@@ -3,6 +3,8 @@
 
 #include <QGraphicsRectItem>
 #include <QObject>
+#include <QGraphicsTextItem>
+#include <QBrush>
 
 class Button : public QObject, public QGraphicsRectItem
 {

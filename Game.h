@@ -4,9 +4,14 @@
 #include <QObject>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QInputDialog>
+#include <Button.h>
+#include <QBrush>
+#include <MapCreator.h>
+#include <QTimer>
+#include <QDir>
 #include "MapCreator.h"
 #include "Tank.h"
-#include "QTimer"
 
 class Game : public QGraphicsView
 {
@@ -15,13 +20,16 @@ public:
     explicit Game(QGraphicsView *parent = nullptr);
 
     void displayMainMenu();
+
     QGraphicsScene* scene;
-    int M;
-    int Tank1;
-    int Tank2;
+    int M;      // Map Info
     MapCreator *map;
 
+    QString Player1;    // Player1 Info
+    QString Tank1;
     Tank *P1;
+    QString Player2;    // Player2 Info
+    QString Tank2;
     Tank *P2;
 
     QTimer *timer;
@@ -29,19 +37,8 @@ public:
 signals:
 
 public slots:
-    void Smap();
+    void selector();
     void newTank();
-    // select tanks
-    void SMT1();
-    void SMT2();
-    void SMT3();
-    void T1();
-    void T2();
-    void T3();
-    void TT1();
-    void TT2();
-    void TT3();
-
     void start();
 
 };

@@ -11,4 +11,10 @@
         <file>maps/map_2.txt</file>
         <file>maps/map_3.txt</file>
     </qresource>
+    <qresource prefix="/Info">
+        <file>Tanks/TanksInfo.txt</file>
+        <file>Tanks/Balance.txt</file>
+        <file>Tanks/Speed.txt</file>
+        <file>Tanks/Strength.txt</file>
+    </qresource>
 </RCC>

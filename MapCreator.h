@@ -3,6 +3,11 @@
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItem>
+#include <QGraphicsView>
+#include <QGraphicsItem>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsRectItem>
+#include <QFile>
 
 class MapCreator : public QGraphicsPixmapItem
 {

@@ -7,21 +7,25 @@
 #include <QPainterPath>
 #include <QGraphicsScene>
 #include <QKeyEvent>
+#include "Health.h"
 
 class Tank : public QObject,  public QGraphicsItem
 {
     Q_OBJECT
 private:
+    QString playerName;
+    QString tankType;
     int speed;
     int damage;
     int tank_ID;
     qreal angle;
     int H;
 
+
 public:
-    explicit Tank(int P, int T, QObject *parent = 0);
+    explicit Tank(QString _name, QString _Type, QObject *parent = 0);
     ~Tank();
-    //Health *health;
+    Health *health;
 
     QRectF boundingRect() const;
     QPainterPath shape() const;

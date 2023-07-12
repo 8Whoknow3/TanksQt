@@ -2,9 +2,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <iostream>
-#include <Button.h>
-#include <QBrush>
-#include <MapCreator.h>
+
 
 
 Game::Game(QGraphicsView *parent)
@@ -38,7 +36,7 @@ void Game::displayMainMenu()
     int bxPos = this->width()/2 - playButton->boundingRect().width()/2;
     int byPos = 275;
     playButton->setPos(bxPos,byPos);
-    connect(playButton,SIGNAL(clicked()),this,SLOT(Smap()));
+    connect(playButton,SIGNAL(clicked()),this,SLOT(selector()));
     scene->addItem(playButton);
 
     // create the NewTank button
@@ -58,7 +56,7 @@ void Game::displayMainMenu()
     scene->addItem(quitButton);
 }
 
-void Game::Smap()
+void Game::selector()
 {
     // clear the scene
     scene->clear();
@@ -66,337 +64,65 @@ void Game::Smap()
     // set background image
     setBackgroundBrush(QBrush(QImage(":/IMAGE/Images/menu.png")));
 
-    // create the title text
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Select Map"));
-    QFont titleFont("times",50);
-    titleText->setFont(titleFont);
-    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 100;
-    titleText->setPos(txPos,tyPos);
-    scene->addItem(titleText);
+    // Select Map
+    QStringList Maps;
+    Maps << tr("Map_1") << tr("Map_2") << tr("Map_3");
 
-    // map 1
-    Button* map1 = new Button(QString("Map 1"));
-    int m1xPos = this->width()/2 - map1->boundingRect().width()/2;
-    int m1yPos = 275;
-    map1->setPos(m1xPos,m1yPos);
-    connect(map1,SIGNAL(clicked()),this,SLOT(SMT1()));
-    scene->addItem(map1);
+    bool ok;
+    QString Map = QInputDialog::getItem(this, tr("Map Select"), tr("Maps"), Maps, 0, false, &ok);
 
-    // map 2
-    Button* map2 = new Button(QString("Map 2"));
-    int m2xPos = this->width()/2 - map2->boundingRect().width()/2;
-    int m2yPos = 350;
-    map2->setPos(m2xPos,m2yPos);
-    connect(map2,SIGNAL(clicked()),this,SLOT(SMT2()));
-    scene->addItem(map2);
+    // Save the Map
+    for(int i = 1; i <= 3; i++){
+        if( Map == ("Map_" + QString::number(i)))
+            M = i;
+    }
 
-    // map 3
-    Button* map3 = new Button(QString("Map 3"));
-    int m3xPos = this->width()/2 - map3->boundingRect().width()/2;
-    int m3yPos = 425;
-    map3->setPos(m3xPos,m3yPos);
-    connect(map3,SIGNAL(clicked()),this,SLOT(SMT3()));
-    scene->addItem(map3);
+    // Get Tanks Type from .txt file
+    QList <QString > Tanksname;
+    QStringList TanksType;
+    QFile file(":/Info/Tanks/TanksInfo.txt");
+
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QTextStream in(&file);
+    while(!in.atEnd()){
+        QString line = in.readLine();
+        Tanksname.push_back(line);
+    }
+
+    for(int i = 0; i < Tanksname.size(); i++)
+        TanksType << Tanksname[i];
+
+    // Get Players Info
+    // Player 1
+    Player1 = QInputDialog::getText(this, tr("Players Name"), tr("P1"), QLineEdit::Normal, QDir::home().dirName(), &ok);
+    Tank1 = QInputDialog::getItem(this, tr("Tanks Select"), tr("P1"), TanksType, 0, false, &ok);
+
+    // Player 2
+    Player2 = QInputDialog::getText(this, tr("Players Name"), tr("P2"), QLineEdit::Normal, QDir::home().dirName(), &ok);
+    Tank2 = QInputDialog::getItem(this, tr("Tanks Select"), tr("P2"), TanksType, 0, false, &ok);
+
+    // Start the Game
+    Button* Start = new Button(QString("Start the Game"));
+    int sxPos = this->width()/2 - Start->boundingRect().width()/2;
+    int syPos = 350;
+    Start->setPos(sxPos,syPos);
+    connect(Start,SIGNAL(clicked()),this,SLOT(start()));
+    scene->addItem(Start);
 }
 
 void Game::newTank()
 {
-    std::cout << "HELLO";
-}
+    QFile file(":/Info/Tanks/TanksInfo.txt");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+        std::cout << "ali";
+        return;
+    }
+    QTextStream out(&file);
+    out << "The magic number is: " << 49 << "\n";
 
-void Game::SMT1()
-{
-    M = 1;
 
-    // clear the scene
-    scene->clear();
-
-    // create the title text
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Select Tank P1"));
-    QFont titleFont("times",50);
-    titleText->setFont(titleFont);
-    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 100;
-    titleText->setPos(txPos,tyPos);
-    scene->addItem(titleText);
-
-    // speed
-    Button* Speed = new Button(QString("Speed"));
-    int sxPos = this->width()/2 - Speed->boundingRect().width()/2;
-    int syPos = 275;
-    Speed->setPos(sxPos,syPos);
-    connect(Speed,SIGNAL(clicked()),this,SLOT(T1()));
-    scene->addItem(Speed);
-
-    // speed
-    Button* Balance = new Button(QString("Balance"));
-    int bxPos = this->width()/2 - Balance->boundingRect().width()/2;
-    int byPos = 350;
-    Balance->setPos(bxPos,byPos);
-    connect(Balance,SIGNAL(clicked()),this,SLOT(T2()));
-    scene->addItem(Balance);
-
-    // strength
-    Button* Strength = new Button(QString("Strength"));
-    int SxPos = this->width()/2 - Strength->boundingRect().width()/2;
-    int SyPos = 425;
-    Strength->setPos(SxPos,SyPos);
-    connect(Strength,SIGNAL(clicked()),this,SLOT(T3()));
-    scene->addItem(Strength);
-}
-
-void Game::SMT2()
-{
-    M = 2;
-
-    // clear the scene
-    scene->clear();
-
-    // create the title text
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Select Tank P1"));
-    QFont titleFont("times",50);
-    titleText->setFont(titleFont);
-    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 100;
-    titleText->setPos(txPos,tyPos);
-    scene->addItem(titleText);
-
-    // speed
-    Button* Speed = new Button(QString("Speed"));
-    int sxPos = this->width()/2 - Speed->boundingRect().width()/2;
-    int syPos = 275;
-    Speed->setPos(sxPos,syPos);
-    connect(Speed,SIGNAL(clicked()),this,SLOT(T1()));
-    scene->addItem(Speed);
-
-    // speed
-    Button* Balance = new Button(QString("Balance"));
-    int bxPos = this->width()/2 - Balance->boundingRect().width()/2;
-    int byPos = 350;
-    Balance->setPos(bxPos,byPos);
-    connect(Balance,SIGNAL(clicked()),this,SLOT(T2()));
-    scene->addItem(Balance);
-
-    // strength
-    Button* Strength = new Button(QString("Strength"));
-    int SxPos = this->width()/2 - Strength->boundingRect().width()/2;
-    int SyPos = 425;
-    Strength->setPos(SxPos,SyPos);
-    connect(Strength,SIGNAL(clicked()),this,SLOT(T3()));
-    scene->addItem(Strength);
-}
-
-void Game::SMT3()
-{
-    M = 3;
-
-    // clear the scene
-    scene->clear();
-
-    // create the title text
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Select Tank P1"));
-    QFont titleFont("times",50);
-    titleText->setFont(titleFont);
-    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 100;
-    titleText->setPos(txPos,tyPos);
-    scene->addItem(titleText);
-
-    // speed
-    Button* Speed = new Button(QString("Speed"));
-    int sxPos = this->width()/2 - Speed->boundingRect().width()/2;
-    int syPos = 275;
-    Speed->setPos(sxPos,syPos);
-    connect(Speed,SIGNAL(clicked()),this,SLOT(T1()));
-    scene->addItem(Speed);
-
-    // speed
-    Button* Balance = new Button(QString("Balance"));
-    int bxPos = this->width()/2 - Balance->boundingRect().width()/2;
-    int byPos = 350;
-    Balance->setPos(bxPos,byPos);
-    connect(Balance,SIGNAL(clicked()),this,SLOT(T2()));
-    scene->addItem(Balance);
-
-    // strength
-    Button* Strength = new Button(QString("Strength"));
-    int SxPos = this->width()/2 - Strength->boundingRect().width()/2;
-    int SyPos = 425;
-    Strength->setPos(SxPos,SyPos);
-    connect(Strength,SIGNAL(clicked()),this,SLOT(T3()));
-    scene->addItem(Strength);
-}
-
-void Game::T1()
-{
-    Tank1 = 1;
-
-    // clear the scene
-    scene->clear();
-
-    // create the title text
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Select Tank P2"));
-    QFont titleFont("times",50);
-    titleText->setFont(titleFont);
-    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 100;
-    titleText->setPos(txPos,tyPos);
-    scene->addItem(titleText);
-
-    // speed
-    Button* Speed = new Button(QString("Speed"));
-    int sxPos = this->width()/2 - Speed->boundingRect().width()/2;
-    int syPos = 275;
-    Speed->setPos(sxPos,syPos);
-    connect(Speed,SIGNAL(clicked()),this,SLOT(TT1()));
-    scene->addItem(Speed);
-
-    // speed
-    Button* Balance = new Button(QString("Balance"));
-    int bxPos = this->width()/2 - Balance->boundingRect().width()/2;
-    int byPos = 350;
-    Balance->setPos(bxPos,byPos);
-    connect(Balance,SIGNAL(clicked()),this,SLOT(TT2()));
-    scene->addItem(Balance);
-
-    // strength
-    Button* Strength = new Button(QString("Strength"));
-    int SxPos = this->width()/2 - Strength->boundingRect().width()/2;
-    int SyPos = 425;
-    Strength->setPos(SxPos,SyPos);
-    connect(Strength,SIGNAL(clicked()),this,SLOT(TT3()));
-    scene->addItem(Strength);
-}
-
-void Game::T2()
-{
-    Tank1 = 2;
-
-    // clear the scene
-    scene->clear();
-
-    // create the title text
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Select Tank P2"));
-    QFont titleFont("times",50);
-    titleText->setFont(titleFont);
-    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 100;
-    titleText->setPos(txPos,tyPos);
-    scene->addItem(titleText);
-
-    // speed
-    Button* Speed = new Button(QString("Speed"));
-    int sxPos = this->width()/2 - Speed->boundingRect().width()/2;
-    int syPos = 275;
-    Speed->setPos(sxPos,syPos);
-    connect(Speed,SIGNAL(clicked()),this,SLOT(TT1()));
-    scene->addItem(Speed);
-
-    // speed
-    Button* Balance = new Button(QString("Balance"));
-    int bxPos = this->width()/2 - Balance->boundingRect().width()/2;
-    int byPos = 350;
-    Balance->setPos(bxPos,byPos);
-    connect(Balance,SIGNAL(clicked()),this,SLOT(TT2()));
-    scene->addItem(Balance);
-
-    // strength
-    Button* Strength = new Button(QString("Strength"));
-    int SxPos = this->width()/2 - Strength->boundingRect().width()/2;
-    int SyPos = 425;
-    Strength->setPos(SxPos,SyPos);
-    connect(Strength,SIGNAL(clicked()),this,SLOT(TT3()));
-    scene->addItem(Strength);
-}
-
-void Game::T3()
-{
-    Tank1 = 3;
-
-    // clear the scene
-    scene->clear();
-
-    // create the title text
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Select Tank P2"));
-    QFont titleFont("times",50);
-    titleText->setFont(titleFont);
-    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 100;
-    titleText->setPos(txPos,tyPos);
-    scene->addItem(titleText);
-
-    // speed
-    Button* Speed = new Button(QString("Speed"));
-    int sxPos = this->width()/2 - Speed->boundingRect().width()/2;
-    int syPos = 275;
-    Speed->setPos(sxPos,syPos);
-    connect(Speed,SIGNAL(clicked()),this,SLOT(TT1()));
-    scene->addItem(Speed);
-
-    // speed
-    Button* Balance = new Button(QString("Balance"));
-    int bxPos = this->width()/2 - Balance->boundingRect().width()/2;
-    int byPos = 350;
-    Balance->setPos(bxPos,byPos);
-    connect(Balance,SIGNAL(clicked()),this,SLOT(TT2()));
-    scene->addItem(Balance);
-
-    // strength
-    Button* Strength = new Button(QString("Strength"));
-    int SxPos = this->width()/2 - Strength->boundingRect().width()/2;
-    int SyPos = 425;
-    Strength->setPos(SxPos,SyPos);
-    connect(Strength,SIGNAL(clicked()),this,SLOT(TT3()));
-    scene->addItem(Strength);
-}
-
-void Game::TT1()
-{
-    Tank2 = 1;
-
-    // clear the scene
-    scene->clear();
-
-    // Start The Game
-    Button* STG = new Button(QString("Start The Game"));
-    int xPos = this->width()/2 - STG->boundingRect().width()/2;
-    int yPos = 350;
-    STG->setPos(xPos,yPos);
-    connect(STG,SIGNAL(clicked()),this,SLOT(start()));
-    scene->addItem(STG);
-}
-
-void Game::TT2()
-{
-    Tank2 = 2;
-
-    // clear the scene
-    scene->clear();
-
-    // Start The Game
-    Button* STG = new Button(QString("Start The Game"));
-    int xPos = this->width()/2 - STG->boundingRect().width()/2;
-    int yPos = 350;
-    STG->setPos(xPos,yPos);
-    connect(STG,SIGNAL(clicked()),this,SLOT(start()));
-    scene->addItem(STG);
-}
-
-void Game::TT3()
-{
-    Tank2 = 3;
-
-    // clear the scene
-    scene->clear();
-
-    // Start The Game
-    Button* STG = new Button(QString("Start The Game"));
-    int xPos = this->width()/2 - STG->boundingRect().width()/2;
-    int yPos = 350;
-    STG->setPos(xPos,yPos);
-    connect(STG,SIGNAL(clicked()),this,SLOT(start()));
-    scene->addItem(STG);
 }
 
 void Game::start()
@@ -410,8 +136,8 @@ void Game::start()
     map.creataMap(scene, M);
 
     // create the Tanks
-    P1 = new Tank(1, Tank1);
-    P2 = new Tank(2, Tank2);
+    P1 = new Tank(Player1, Tank1);
+    P2 = new Tank(Player2, Tank2);
 
     if( M == 1 ){
         P1->setPos(80, 625);
@@ -429,8 +155,14 @@ void Game::start()
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), P1, SLOT(TankMove2()));
     connect(timer, SIGNAL(timeout()), P2, SLOT(TankMove1()));
-    timer->start(1000 / 50);
+    timer->start(20);
 
     scene->addItem(P1);
     scene->addItem(P2);
+
+    // Health
+    P1->health->setPos(1170, 0);
+    scene->addItem(P1->health);
+    P2->health->setPos(0, 0);
+    scene->addItem(P2->health);
 }

@@ -1,10 +1,7 @@
 #include "MapCreator.h"
-#include <QGraphicsView>
-#include <QGraphicsItem>
-#include <QGraphicsPixmapItem>
-#include <QGraphicsRectItem>
-#include <QFile>
-#include "MapHelper.h"
+#include "Wall.h"
+#include "Box.h"
+#include "Forest.h"
 
 MapCreator::MapCreator()
 {
@@ -30,7 +27,7 @@ void MapCreator::creataMap(QGraphicsScene *scene, int s, QGraphicsItem *parent)
         QString line = in.readLine();
         for(int i = 0; i < line.size(); i++){
             if(line[i] == '1'){
-                MapHelper *a = new MapHelper(1);
+                Wall *a = new Wall();
                 a->setPos(col * 50, row * 50);
                 scene->addItem(a);
             }
@@ -38,16 +35,15 @@ void MapCreator::creataMap(QGraphicsScene *scene, int s, QGraphicsItem *parent)
                 col++;
             }
             else if(line[i] == '2'){
-                MapHelper *a = new MapHelper(2);
+                Box *a = new Box();
                 a->setPos(col * 50, row * 50);
                 scene->addItem(a);
             }
             else if(line[i] == '3'){
-                MapHelper *a = new MapHelper(3);
+                Forest *a = new Forest();
                 a->setPos(col * 50, row * 50);
                 scene->addItem(a);
             }
         }
-
     }
 }

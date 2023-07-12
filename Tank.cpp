@@ -1,30 +1,33 @@
 #include "Tank.h"
 #include "windows.h"
+#include <QFile>
 
 int Tank::numTanks = 0;
 
-Tank::Tank(int P, int T, QObject *parent)
+Tank::Tank(QString _name, QString _Type, QObject *parent)
     : QObject{parent}
 {
+    playerName = _name;
+    tankType = _Type;
+
     angle = 0;     //   Setting the rotation angle of the graphic object
     setRotation(angle);  // Set the angle of rotation of the graphic object
     tank_ID = ++numTanks;
-    if(T == 1){
-        speed = 6;
-        damage = 10;
-        H = 80;
-    }
-    else if(T == 2){
-        speed = 5;
-        damage = 15;
-        H = 100;
-    }
-    else if(T == 3){
-        speed = 4;
-        damage = 20;
-        H = 120;
-    }
-    //health = new Health(H, , P);
+
+    QFile file(":/Info/Tanks/" + _Type + ".txt");
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QTextStream in(&file);
+    QString line = in.readLine();
+    bool ok;
+    speed = line.toInt(&ok);
+    line = in.readLine();
+    damage = line.toInt(&ok);
+    line = in.readLine();
+    H = line.toInt(&ok);
+
+    health = new Health(playerName, H, tank_ID);
 }
 
 Tank::~Tank()
