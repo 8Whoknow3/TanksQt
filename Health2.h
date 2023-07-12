@@ -1,19 +1,21 @@
-#ifndef HEALTH_H
-#define HEALTH_H
+#ifndef HEALTH2_H
+#define HEALTH2_H
 
 #include <QObject>
 #include <QGraphicsTextItem>
 #include <QFont>
 
-class Health : public QGraphicsTextItem
+class Health2 : public QGraphicsTextItem
 {
     Q_OBJECT
 public:
-    explicit Health(QString _name, int _health, int _ID, QGraphicsItem * parent = nullptr);
+    explicit Health2(QString _name, int _health, QGraphicsItem * parent = nullptr);
 
 private:
     int health;
     int maxHealth;
+    QString name;
+
 signals:
     void EndofGame(int ID);
 
@@ -21,4 +23,4 @@ public slots:
     void Damage(int _health, int _ID);
 };
 
-#endif // HEALTH_H
+#endif // HEALTH2_H

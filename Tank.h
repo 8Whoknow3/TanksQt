@@ -7,7 +7,8 @@
 #include <QPainterPath>
 #include <QGraphicsScene>
 #include <QKeyEvent>
-#include "Health.h"
+#include "Health1.h"
+#include "Health2.h"
 
 class Tank : public QObject,  public QGraphicsItem
 {
@@ -25,7 +26,8 @@ private:
 public:
     explicit Tank(QString _name, QString _Type, QObject *parent = 0);
     ~Tank();
-    Health *health;
+    Health1 *health1;
+    Health2 *health2;
 
     QRectF boundingRect() const;
     QPainterPath shape() const;

@@ -161,8 +161,8 @@ void Game::start()
     scene->addItem(P2);
 
     // Health
-    P1->health->setPos(1170, 0);
-    scene->addItem(P1->health);
-    P2->health->setPos(0, 0);
-    scene->addItem(P2->health);
+    P1->health1->setPos(1100, 0);
+    scene->addItem(P1->health1);
+    P2->health2->setPos(0, 0);
+    scene->addItem(P2->health2);
 }

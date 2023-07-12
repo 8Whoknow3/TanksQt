@@ -13,7 +13,8 @@ SOURCES += \
     Button.cpp \
     Forest.cpp \
     Game.cpp \
-    Health.cpp \
+    Health1.cpp \
+    Health2.cpp \
     MapCreator.cpp \
     Tank.cpp \
     Wall.cpp \
@@ -24,7 +25,8 @@ HEADERS += \
     Button.h \
     Forest.h \
     Game.h \
-    Health.h \
+    Health1.h \
+    Health2.h \
     MapCreator.h \
     Tank.h \
     Wall.h

@@ -27,7 +27,14 @@ Tank::Tank(QString _name, QString _Type, QObject *parent)
     line = in.readLine();
     H = line.toInt(&ok);
 
-    health = new Health(playerName, H, tank_ID);
+    if(tank_ID == 1){
+        health1 = new Health1(playerName, H);
+        health2 = NULL;
+    }
+    else if(tank_ID == 2){
+        health2 = new Health2(playerName, H);
+        health1 = NULL;
+    }
 }
 
 Tank::~Tank()
