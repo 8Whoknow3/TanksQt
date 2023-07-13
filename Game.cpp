@@ -8,12 +8,12 @@
 Game::Game(QGraphicsView *parent)
     : QGraphicsView{parent}
 {
-    setFixedSize(1350,700);
+    setFixedSize(1485, 770);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,1350,700);
+    scene->setSceneRect(0, 0, 1485, 770);
     setScene(scene);
 }
 
@@ -116,10 +116,22 @@ void Game::selector()
 
 void Game::newTank()
 {
+    setBackgroundBrush(QBrush(QImage(":/IMAGE/Images/menu.png")));
+    scene->clear();
     // Get Tanks name
     bool ok;
     QString TName = QInputDialog::getText(this, tr("New Tanks"), tr("Name"), QLineEdit::Normal, QDir::home().dirName(), &ok);
 
+    GetInfo:
+    // Get Speed, Damage, Health
+    int S = QInputDialog::getInt(this, tr("New Tanks"), tr("Speed"), 5, 1, 10, 1, &ok);
+    int D = QInputDialog::getInt(this, tr("New Tanks"), tr("Damage"), 15, 5, 35, 5, &ok);
+    int H = QInputDialog::getInt(this, tr("New Tanks"), tr("Health"), 80, 65, 150, 5, &ok);
+    if(!((S + D + H) / 3 >= 20 && (S + D + H) / 3 <= 45))
+        goto GetInfo;
+    // Should write in the GameFile
+    // Cant write in File
+    displayMainMenu();
 }
 
 void Game::start()
@@ -136,20 +148,22 @@ void Game::start()
     P2 = new Tank(Player2, Tank2);
 
     if( M == 1 ){
-        P1->setPos(80, 625);
+        P1->setPos(100, 675);
         P1->angle = 180;
         P1->setRotation(P1->angle);
-        P2->setPos(1250, 625);
+        P2->setPos(1375, 675);
         P2->angle = 180;
         P2->setRotation(P2->angle);
     }
     else if( M == 2 ){
-        P1->setPos(80, 130);
-        P2->setPos(1270, 130);
+        P1->setPos(140, 150);
+        P2->setPos(1365, 150);
     }
     else if( M == 3 ){
-        P1->setPos(80, 130);
-        P2->setPos(1275, 625);
+        P1->setPos(115, 150);
+        P2->setPos(1375, 675);
+        P2->angle = 180;
+        P2->setRotation(P2->angle);
     }
     scene->addItem(P1);
     scene->addItem(P2);
@@ -163,10 +177,8 @@ void Game::start()
     connect (P1,&Tank::SBullet,this, &Game::sBullet);
     connect (P2,&Tank::SBullet,this, &Game::sBullet);
 
-
-
     // Health
-    P1->health1->setPos(1100, 0);
+    P1->health1->setPos(1245, 0);
     scene->addItem(P1->health1);
     P2->health2->setPos(0, 0);
     scene->addItem(P2->health2);

@@ -24,7 +24,7 @@ MapCreator::MapCreator(QGraphicsScene *scene, int s, QGraphicsItem *parent):
         for(int i = 0; i < line.size(); i++){
             if(line[i] == '1'){
                 Wall *a = new Wall();
-                a->setPos(col * 50, row * 50);
+                a->setPos(col * 55, row * 55);
                 scene->addItem(a);
             }
             else if(line[i] == ' '){
@@ -32,12 +32,12 @@ MapCreator::MapCreator(QGraphicsScene *scene, int s, QGraphicsItem *parent):
             }
             else if(line[i] == '2'){
                 Box *a = new Box();
-                a->setPos(col * 50, row * 50);
+                a->setPos(col * 55, row * 55);
                 scene->addItem(a);
             }
             else if(line[i] == '3'){
                 Forest *a = new Forest();
-                a->setPos(col * 50, row * 50);
+                a->setPos(col * 55, row * 55);
                 scene->addItem(a);
             }
         }
