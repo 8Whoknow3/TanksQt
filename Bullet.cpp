@@ -71,14 +71,14 @@ void Bullet::bulletMove()
     if(x() < 0){
         deleteLater();
     }
-    if(x() > 1350){
+    if(x() > 1485){
         deleteLater();
     }
 
     if(y() < 0){
         deleteLater();
     }
-    if(y() > 700){
+    if(y() > 770){
         deleteLater();
     }
 

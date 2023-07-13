@@ -196,10 +196,6 @@ void Game::sBullet(QPointF start, qreal angle)
 
 void Game::slotEndofGame(int ID)
 {
-    if(ID == 1)
-        scene->removeItem(P1);
-    if(ID == 2)
-        scene->removeItem(P2);
 
     scene->clear();
     QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("P" + QString::number(ID) + " is Winner"));
