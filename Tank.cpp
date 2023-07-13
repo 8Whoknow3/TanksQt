@@ -12,7 +12,11 @@ Tank::Tank(QString _name, QString _Type, QObject *parent)
 
     angle = 0;     //   Setting the rotation angle of the graphic object
     setRotation(angle);  // Set the angle of rotation of the graphic object
-    tank_ID = ++numTanks;
+    int a = (++numTanks) % 2;
+    if(a == 0)
+        tank_ID = 2;
+    if(a == 1)
+        tank_ID = 1;
 
     QFile file(":/Info/Tanks/" + _Type + ".txt");
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))

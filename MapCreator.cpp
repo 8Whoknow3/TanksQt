@@ -42,4 +42,5 @@ MapCreator::MapCreator(QGraphicsScene *scene, int s, QGraphicsItem *parent):
             }
         }
     }
+    file.close();
 }

@@ -47,7 +47,7 @@ public slots:
     void start();
     void sBullet(QPointF start, qreal angle);   // Bullet Maker
     void slotEndofGame(int ID);
-    void restartGame();
+    void Menu();
 };
 
 #endif // GAME_H
