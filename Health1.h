@@ -20,7 +20,7 @@ signals:
     void EndofGame(int ID);
 
 public slots:
-    void Damage(int _health, int _ID);
+    void Damage1(int _health, int _ID);
 };
 
 #endif // HEALTH1_H

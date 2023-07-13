@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     Box.cpp \
+    Bullet.cpp \
     Button.cpp \
     Forest.cpp \
     Game.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 
 HEADERS += \
     Box.h \
+    Bullet.h \
     Button.h \
     Forest.h \
     Game.h \

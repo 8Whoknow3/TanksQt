@@ -30,10 +30,12 @@ Tank::Tank(QString _name, QString _Type, QObject *parent)
     if(tank_ID == 1){
         health1 = new Health1(playerName, H);
         health2 = NULL;
+        connect(this, &Tank::Damage, health1, &Health1::Damage1);
     }
     else if(tank_ID == 2){
         health2 = new Health2(playerName, H);
         health1 = NULL;
+        connect(this, &Tank::Damage, health2, &Health2::Damage2);
     }
 }
 
@@ -90,7 +92,6 @@ void Tank::TankMove1()
             angle += 10;
             // Rotating the object
             setRotation(angle);
-
         }
     }
     if(GetAsyncKeyState(VK_RIGHT)){
@@ -117,6 +118,9 @@ void Tank::TankMove1()
         if(!scene()->collidingItems(this).isEmpty()){
             setPos(mapToParent(0, 5));
         }
+    }
+    if(GetAsyncKeyState('K')){
+        emit SBullet(mapToScene(0, 25), angle);
     }
 }
 
@@ -153,5 +157,17 @@ void Tank::TankMove2()
         if(!scene()->collidingItems(this).isEmpty()){
             setPos(mapToParent(0, 5));
         }
+    }
+    if(GetAsyncKeyState('C'))
+        emit SBullet(mapToScene(0, 25), angle);
+}
+
+void Tank::getHit(QGraphicsItem *item)
+{
+    if (item != this){
+        if(tank_ID == 1)
+            emit Damage(damage, 2);
+        if(tank_ID == 2)
+            emit Damage(damage, 1);
     }
 }

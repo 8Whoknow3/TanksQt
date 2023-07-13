@@ -22,7 +22,6 @@ private:
     qreal angle;
     int H;
 
-
 public:
     explicit Tank(QString _name, QString _Type, QObject *parent = 0);
     ~Tank();
@@ -38,10 +37,13 @@ public:
 
 
 signals:
+    void SBullet(QPointF start, qreal angle);
+    void Damage(int health, int ID);
 
 public slots:
     void TankMove1(); // moving by WASD
     void TankMove2(); // moving by -> <-
+    void getHit(QGraphicsItem *item);
 };
 
 #endif // TANK_H

@@ -40,7 +40,8 @@ public slots:
     void selector();
     void newTank();
     void start();
-
+    void sBullet(QPointF start, qreal angle);   // Bullet Maker
+    void slotEndofGame(int ID);
 };
 
 #endif // GAME_H

@@ -2,8 +2,8 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <iostream>
-
-
+#include <QFile>
+#include "Bullet.h"
 
 Game::Game(QGraphicsView *parent)
     : QGraphicsView{parent}
@@ -132,8 +132,7 @@ void Game::start()
 
     // create the map
     setBackgroundBrush(QBrush(Qt::NoBrush));
-    MapCreator map;
-    map.creataMap(scene, M);
+    map->creataMap(scene, M);
 
     // create the Tanks
     P1 = new Tank(Player1, Tank1);
@@ -157,6 +156,10 @@ void Game::start()
     connect(timer, SIGNAL(timeout()), P2, SLOT(TankMove1()));
     timer->start(20);
 
+    // Bullet
+    connect (P1,&Tank::SBullet,this, &Game::sBullet);
+    connect (P2,&Tank::SBullet,this, &Game::sBullet);
+
     scene->addItem(P1);
     scene->addItem(P2);
 
@@ -165,4 +168,53 @@ void Game::start()
     scene->addItem(P1->health1);
     P2->health2->setPos(0, 0);
     scene->addItem(P2->health2);
+    connect(P1->health1, &Health1::EndofGame, this, &Game::slotEndofGame);
+    connect(P2->health2, &Health2::EndofGame, this, &Game::slotEndofGame);
+}
+
+void Game::sBullet(QPointF start, qreal angle)
+{
+    Bullet *bullet = new Bullet(start, angle);
+    scene->addItem(bullet);
+    connect(bullet, &Bullet::hit, P1, &Tank::getHit);
+    connect(bullet, &Bullet::hit, P2, &Tank::getHit);
+}
+
+void Game::slotEndofGame(int ID)
+{
+    // Clear The scene
+    scene->clear();
+
+    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("P" + QString::number(ID) + " is Winner"));
+
+    QFont titleFont("times",50);
+    titleText->setFont(titleFont);
+    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
+    int tyPos = 150;
+    titleText->setPos(txPos,tyPos);
+    scene->addItem(titleText);
+
+    // create the playAgain button
+    Button* playButton = new Button(QString("Play Again"));
+    int PAxPos = this->width()/2 - playButton->boundingRect().width()/2;
+    int PAyPos = 275;
+    playButton->setPos(PAxPos,PAyPos);
+    connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
+    scene->addItem(playButton);
+
+    // create the StartAgain button
+    Button* startButton = new Button(QString("Start Again"));
+    int bxPos = this->width()/2 - startButton->boundingRect().width()/2;
+    int byPos = 350;
+    startButton->setPos(bxPos,byPos);
+    connect(startButton,SIGNAL(clicked()),this,SLOT(selector()));
+    scene->addItem(startButton);
+
+    // create the quit button
+    Button* quitButton = new Button(QString("Exit"));
+    int qxPos = this->width()/2 - quitButton->boundingRect().width()/2;
+    int qyPos = 425;
+    quitButton->setPos(qxPos,qyPos);
+    connect(quitButton,SIGNAL(clicked()),this,SLOT(close()));
+    scene->addItem(quitButton);
 }
