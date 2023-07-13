@@ -5,7 +5,7 @@
 int Tank::numTanks = 0;
 
 Tank::Tank(QString _name, QString _Type, QObject *parent)
-    : QObject{parent}
+    : QObject{parent}, QGraphicsItem()
 {
     playerName = _name;
     tankType = _Type;
@@ -29,12 +29,10 @@ Tank::Tank(QString _name, QString _Type, QObject *parent)
 
     if(tank_ID == 1){
         health1 = new Health1(playerName, H);
-        health2 = NULL;
         connect(this, &Tank::Damage, health1, &Health1::Damage1);
     }
     else if(tank_ID == 2){
         health2 = new Health2(playerName, H);
-        health1 = NULL;
         connect(this, &Tank::Damage, health2, &Health2::Damage2);
     }
 }

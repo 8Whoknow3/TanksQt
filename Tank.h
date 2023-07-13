@@ -19,7 +19,6 @@ private:
     int speed;
     int damage;
     int tank_ID;
-    qreal angle;
     int H;
 
 public:
@@ -27,6 +26,7 @@ public:
     ~Tank();
     Health1 *health1;
     Health2 *health2;
+    qreal angle;
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -43,6 +43,7 @@ signals:
 public slots:
     void TankMove1(); // moving by WASD
     void TankMove2(); // moving by -> <-
+
     void getHit(QGraphicsItem *item);
 };
 

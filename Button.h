@@ -14,6 +14,7 @@ private:
 
 public:
     explicit Button(QString name, QGraphicsItem *parent = nullptr);
+    ~Button();
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);

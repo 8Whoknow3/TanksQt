@@ -15,13 +15,20 @@ Game::Game(QGraphicsView *parent)
     scene = new QGraphicsScene();
     scene->setSceneRect(0,0,1350,700);
     setScene(scene);
+}
 
-    // set background image
-    setBackgroundBrush(QBrush(QImage(":/IMAGE/Images/gamemenu.png")));
+Game::~Game()
+{
+    delete map; Maps.clear();
+    delete P1;  delete P2;
+    delete timer;
 }
 
 void Game::displayMainMenu()
 {
+    // set background image
+    setBackgroundBrush(QBrush(QImage(":/IMAGE/Images/gamemenu.png")));
+
     // create the title text
     QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Tanks War"));
     QFont titleFont("times",50);
@@ -65,7 +72,6 @@ void Game::selector()
     setBackgroundBrush(QBrush(QImage(":/IMAGE/Images/menu.png")));
 
     // Select Map
-    QStringList Maps;
     Maps << tr("Map_1") << tr("Map_2") << tr("Map_3");
 
     bool ok;
@@ -78,8 +84,6 @@ void Game::selector()
     }
 
     // Get Tanks Type from .txt file
-    QList <QString > Tanksname;
-    QStringList TanksType;
     QFile file(":/Info/Tanks/TanksInfo.txt");
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -103,26 +107,17 @@ void Game::selector()
     Player2 = QInputDialog::getText(this, tr("Players Name"), tr("P2"), QLineEdit::Normal, QDir::home().dirName(), &ok);
     Tank2 = QInputDialog::getItem(this, tr("Tanks Select"), tr("P2"), TanksType, 0, false, &ok);
 
-    // Start the Game
-    Button* Start = new Button(QString("Start the Game"));
-    int sxPos = this->width()/2 - Start->boundingRect().width()/2;
-    int syPos = 350;
-    Start->setPos(sxPos,syPos);
-    connect(Start,SIGNAL(clicked()),this,SLOT(start()));
-    scene->addItem(Start);
+    start();
 }
 
 void Game::newTank()
 {
-    QFile file(":/Info/Tanks/TanksInfo.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
-        std::cout << "ali";
-        return;
+    QFile data(":/Info/Tanks/TanksInfo.txt");
+    if(data.open(QFile::WriteOnly | QFile::Append)){
+        QTextStream out(&data);
+        out << "Result";
     }
-    QTextStream out(&file);
-    out << "The magic number is: " << 49 << "\n";
-
-
+    data.flush();
 }
 
 void Game::start()
@@ -132,7 +127,7 @@ void Game::start()
 
     // create the map
     setBackgroundBrush(QBrush(Qt::NoBrush));
-    map->creataMap(scene, M);
+    map = new MapCreator(scene, M);
 
     // create the Tanks
     P1 = new Tank(Player1, Tank1);
@@ -140,16 +135,22 @@ void Game::start()
 
     if( M == 1 ){
         P1->setPos(80, 625);
+        P1->angle = 180;
+        P1->setRotation(P1->angle);
         P2->setPos(1250, 625);
+        P2->angle = 180;
+        P2->setRotation(P2->angle);
     }
     else if( M == 2 ){
         P1->setPos(80, 130);
-        P2->setPos(1275, 130);
+        P2->setPos(1270, 130);
     }
     else if( M == 3 ){
         P1->setPos(80, 130);
         P2->setPos(1275, 625);
     }
+    scene->addItem(P1);
+    scene->addItem(P2);
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), P1, SLOT(TankMove2()));
@@ -160,8 +161,7 @@ void Game::start()
     connect (P1,&Tank::SBullet,this, &Game::sBullet);
     connect (P2,&Tank::SBullet,this, &Game::sBullet);
 
-    scene->addItem(P1);
-    scene->addItem(P2);
+
 
     // Health
     P1->health1->setPos(1100, 0);
@@ -182,9 +182,10 @@ void Game::sBullet(QPointF start, qreal angle)
 
 void Game::slotEndofGame(int ID)
 {
-    // Clear The scene
-    scene->clear();
-
+    if(ID == 1)
+        scene->removeItem(P1);
+    if(ID == 2)
+        scene->removeItem(P2);
     QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("P" + QString::number(ID) + " is Winner"));
 
     QFont titleFont("times",50);
@@ -193,28 +194,24 @@ void Game::slotEndofGame(int ID)
     int tyPos = 150;
     titleText->setPos(txPos,tyPos);
     scene->addItem(titleText);
-
-    // create the playAgain button
-    Button* playButton = new Button(QString("Play Again"));
+    // create the Restart button
+    Button* playButton = new Button(QString("Restart Game"));
     int PAxPos = this->width()/2 - playButton->boundingRect().width()/2;
-    int PAyPos = 275;
+    int PAyPos = 350;
     playButton->setPos(PAxPos,PAyPos);
-    connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
+    connect(playButton,SIGNAL(clicked()),this,SLOT(restartGame()));
     scene->addItem(playButton);
 
-    // create the StartAgain button
-    Button* startButton = new Button(QString("Start Again"));
-    int bxPos = this->width()/2 - startButton->boundingRect().width()/2;
-    int byPos = 350;
-    startButton->setPos(bxPos,byPos);
-    connect(startButton,SIGNAL(clicked()),this,SLOT(selector()));
-    scene->addItem(startButton);
-
-    // create the quit button
-    Button* quitButton = new Button(QString("Exit"));
-    int qxPos = this->width()/2 - quitButton->boundingRect().width()/2;
-    int qyPos = 425;
-    quitButton->setPos(qxPos,qyPos);
-    connect(quitButton,SIGNAL(clicked()),this,SLOT(close()));
-    scene->addItem(quitButton);
 }
+
+void Game::restartGame()
+{
+    Tanksname.clear();
+    TanksType.clear();
+    delete map; Maps.clear();
+    delete P1;  delete P2;
+    delete timer;
+    scene->clear();
+    displayMainMenu();
+}
+

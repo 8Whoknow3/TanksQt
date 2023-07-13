@@ -3,12 +3,8 @@
 #include "Box.h"
 #include "Forest.h"
 
-MapCreator::MapCreator()
-{
-
-}
-
-void MapCreator::creataMap(QGraphicsScene *scene, int s, QGraphicsItem *parent)
+MapCreator::MapCreator(QGraphicsScene *scene, int s, QGraphicsItem *parent):
+    QGraphicsPixmapItem(parent)
 {
     QString a = QString::number(s);
     QFile file(":/Maps/maps/map_" + a + ".txt");
